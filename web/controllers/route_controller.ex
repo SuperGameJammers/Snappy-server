@@ -3,12 +3,12 @@ defmodule Oiseau.RouteController do
   alias Neo4j.Sips, as: Neo4j
   use HTTPoison.Base
 
-  def do_the_magic(conn, params) do
+  def do_the_magic(conn, %{"origin_lat" => origin_lat, "origin_lon" => origin_lon, "destiny_lat" => destiny_lat, "destiny_lon" => destiny_lon}) do
     elastic_query = %{"query" => %{"filtered" => %{"query" => 
                           %{"match_all" => %{}}, "filter" => 
                                %{"geo_distance" => 
                               %{"distance" => "1000km", "location" => 
-                                %{"lat" => 18.9534143986, "lon" => -99.5033692569}}}}}}
+                                %{"lat" => "#{origin_lat}", "lon" => "#{origin_lon}"}}}}}}
 
     case post("http://localhost:9200/nodes/_search", elastic_query) do
       {:ok, %HTTPoison.Response{body: %{"hits" => %{"hits" => geo_points}}}} ->
@@ -17,15 +17,15 @@ defmodule Oiseau.RouteController do
         %{"_source" => %{"id" => destiny}} = Enum.at(geo_points, (Enum.count(geo_points) - 1))
         
         cypher = """
-          MATCH (from: Node  {shape_pt_sequence: #{origin}}), (to: Node {shape_pt_sequence: #{destiny}}) , 
+          MATCH (from: Node  {sequence_id: #{origin}}), (to: Node {sequence_id: #{destiny}}) , 
             paths = allShortestPaths((from)-[*]->(to))
           WITH REDUCE(dist = 0, rel in rels(paths) | dist + rel.distance) AS distance, paths
           RETURN paths, distance
           ORDER BY distance
-          LIMIT 1
         """
-        [result] = Neo4j.query!(Neo4j.conn, cypher)
+        result = Neo4j.query!(Neo4j.conn, cypher)
         json(conn, %{result: result})
+
        {:error, reason} ->
         json(conn, %{error: "Falló elasticsearch #{reason}"})
     end

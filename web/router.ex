@@ -25,6 +25,6 @@ defmodule Oiseau.Router do
     pipe_through :api
 
     resources "/users", UserController, except: [:new, :edit]
-    get "/magic", RouteController, :do_the_magic
+    get "/magic/:origin_lat/:origin_lon/:destiny_lat/:destiny_lon", RouteController, :do_the_magic
   end
 end
