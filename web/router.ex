@@ -11,6 +11,8 @@ defmodule Oiseau.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+
+    resources "/users", UserController, except: [:new, :edit]
   end
 
   scope "/", Oiseau do
@@ -18,7 +20,6 @@ defmodule Oiseau.Router do
 
     get "/", PageController, :index
 
-    resources "/users", UserController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.

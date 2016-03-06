@@ -11,8 +11,8 @@ defmodule Oiseau.User do
     timestamps
   end
 
-  @required_fields ~w(faction name points fb_token fb_id)
-  @optional_fields ~w()
+  @required_fields ~w(faction name fb_token fb_id)
+  @optional_fields ~w(points)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -23,5 +23,17 @@ defmodule Oiseau.User do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+  end
+
+  def by_faction(faction) do
+    query = from user in User,
+    where: user.faction == ^faction
+    Repo.all(query)
+  end
+
+  def leaderboard(limit) do
+    query = from user in User,
+    order_by: [asc: user.points],
+    limit: ^limit
   end
 end
