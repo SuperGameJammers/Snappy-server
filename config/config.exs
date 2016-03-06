@@ -20,7 +20,7 @@ config :neo4j_sips, Neo4j,
   pool_size: 5,
   max_overflow: 2,
   timeout: 30,
-  basic_auth: [username: "neo4j", password: "neo4j"]
+  basic_auth: [username: "neo4j", password: "superpirates"]
 
 # Configures Elixir's Logger
 config :logger, :console,
