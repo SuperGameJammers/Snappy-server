@@ -11,10 +11,13 @@ defmodule Oiseau.RouteController do
                                 %{"lat" => 18.9534143986, "lon" => -99.5033692569}}}}}}
 
     case post("http://localhost:9200/nodes/_search", elastic_query) do
-      {:ok, elasticsearch} ->
-        IO.puts inspect elasticsearch
+      {:ok, %HTTPoison.Response{body: %{"hits" => %{"hits" => geo_points}}}} ->
+
+        %{"_source" => %{"id" => origin}} = Enum.at(geo_points, 0)
+        %{"_source" => %{"id" => destiny}} = Enum.at(geo_points, (Enum.count(geo_points) - 1))
+        
         cypher = """
-          MATCH (from: Node  {shape_pt_sequence: 0}), (to: Node {shape_pt_sequence: 25}) , 
+          MATCH (from: Node  {shape_pt_sequence: #{origin}}), (to: Node {shape_pt_sequence: #{destiny}}) , 
             paths = allShortestPaths((from)-[*]->(to))
           WITH REDUCE(dist = 0, rel in rels(paths) | dist + rel.distance) AS distance, paths
           RETURN paths, distance
