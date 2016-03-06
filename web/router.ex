@@ -11,8 +11,6 @@ defmodule Oiseau.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-
-    resources "/users", UserController, except: [:new, :edit]
   end
 
   scope "/", Oiseau do
@@ -23,7 +21,9 @@ defmodule Oiseau.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Oiseau do
-  #   pipe_through :api
-  # end
+  scope "/api", Oiseau do
+    pipe_through :api
+
+    resources "/users", UserController, except: [:new, :edit]
+  end
 end
