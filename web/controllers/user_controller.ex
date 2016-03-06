@@ -26,7 +26,7 @@ defmodule Oiseau.UserController do
   end
   defp sum_faction_points(users), do: Enum.reduce(users, 0, fn(user, acc) -> user.points + acc end)
 
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, user_params) do
     changeset = User.changeset(%User{}, user_params)
 
     case Repo.insert(changeset) do
