@@ -18,7 +18,7 @@ defmodule Oiseau.UserController do
   end
 
   def totals_by_faction(conn, _params) do
-    points_by_faction = for faction in @factions do
+    points_by_faction = for faction <- @factions do
       User.all_by_faction(faction)
       |> sum_faction_points
     end

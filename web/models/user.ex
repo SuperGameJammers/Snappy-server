@@ -11,8 +11,8 @@ defmodule Oiseau.User do
     timestamps
   end
 
-  @required_fields ~w(faction name fb_token fb_id)
-  @optional_fields ~w(points)
+  @required_fields ~w(faction name fb_id)
+  @optional_fields ~w(points fb_token)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
