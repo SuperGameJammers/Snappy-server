@@ -25,7 +25,7 @@ defmodule Oiseau.User do
     |> cast(params, @required_fields, @optional_fields)
   end
 
-  def by_faction(faction) do
+  def all_by_faction(faction) do
     query = from user in User,
     where: user.faction == ^faction
     Repo.all(query)

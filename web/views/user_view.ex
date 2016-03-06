@@ -17,4 +17,8 @@ defmodule Oiseau.UserView do
       fb_token: user.fb_token,
       fb_id: user.fb_id}
   end
+
+  def render("points_by_faction.json", %{points_by_faction: points_by_faction}) do
+    %{points_by_faction: points_by_faction}
+  end
 end

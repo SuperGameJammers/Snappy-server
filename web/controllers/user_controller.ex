@@ -3,12 +3,28 @@ defmodule Oiseau.UserController do
 
   alias Oiseau.User
 
+  @factions ["gatitos", "patitos"]
+
   plug :scrub_params, "user" when action in [:create, :update]
 
   def index(conn, _params) do
     users = Repo.all(User)
     render(conn, "index.json", users: users)
   end
+
+  def leaderboard(conn, _params) do
+    users = User.leaderboard(10)
+    render(conn, "index.json", users: users)
+  end
+
+  def totals_by_faction(conn, _params) do
+    points_by_faction = for faction in @factions do
+      User.all_by_faction(faction)
+      |> sum_faction_points
+    end
+    render(conn, "points_by_faction.json", points_by_faction: points_by_faction)
+  end
+  defp sum_faction_points(users), do: Enum.reduce(users, 0, fn(user, acc) -> user.points + acc end)
 
   def create(conn, %{"user" => user_params}) do
     changeset = User.changeset(%User{}, user_params)
