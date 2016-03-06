@@ -14,6 +14,14 @@ config :oiseau, Oiseau.Endpoint,
   pubsub: [name: Oiseau.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+# Configures Neo4j
+config :neo4j_sips, Neo4j,
+  url: "http://localhost:7474",
+  pool_size: 5,
+  max_overflow: 2,
+  timeout: 30,
+  basic_auth: [username: "neo4j", password: "neo4j"]
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
