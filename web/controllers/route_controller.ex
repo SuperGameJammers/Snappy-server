@@ -18,7 +18,7 @@ defmodule Oiseau.RouteController do
         
         cypher = """
           MATCH (from: Node  {sequence_id: #{origin}}), (to: Node {sequence_id: #{destiny}}) , 
-            paths = allShortestPaths((from)-[*]->(to))
+            paths = allShortestPaths((from)-[*]-(to))
           WITH REDUCE(dist = 0, rel in rels(paths) | dist + rel.distance) AS distance, paths
           RETURN paths, distance
           ORDER BY distance
