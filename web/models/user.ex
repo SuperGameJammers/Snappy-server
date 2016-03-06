@@ -35,5 +35,6 @@ defmodule Oiseau.User do
     query = from user in User,
     order_by: [asc: user.points],
     limit: ^limit
+    Repo.all(query)
   end
 end
